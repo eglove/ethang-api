@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Certification {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  name        String    @db.VarChar(255)
+  issuedBy    String    @db.VarChar(255)
+  description String
+  url         String    @db.VarChar(255)
+  issuedOn    DateTime
+  expires     DateTime?
+}
+
+model Job {
+  id                 String    @id @default(uuid())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  title              String    @db.VarChar(255)
+  company            String    @db.VarChar(255)
+  startDate          DateTime
+  endDate            DateTime?
+  shortDescription   String
+  techUsed           String[]
+  methodologiesUsed  String[]
+  descriptionBullets String[]
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String   @db.VarChar(255)
+  description String
+  url         String   @db.VarChar(255)
+}
+
+model Summary {
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  name            String   @db.VarChar(255)
+  email           String   @db.VarChar(255)
+  address         String   @db.VarChar(255)
+  website         String   @db.VarChar(255)
+  github          String   @db.VarChar(255)
+  linkedIn        String   @db.VarChar(255)
+  summary         String
+  experienceStart DateTime
+}
