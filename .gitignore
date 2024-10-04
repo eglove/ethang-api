@@ -6,3 +6,4 @@ encore.gen.cue
 node_modules
 /encore.gen
 .idea
+.secrets.local.cue
