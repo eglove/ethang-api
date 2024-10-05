@@ -1,6 +1,6 @@
 import {createClerkClient, verifyToken} from "@clerk/backend";
 import {APIError, Gateway, Header} from "encore.dev/api";
-import {AUTHORIZED_PARTIES, CLERK_SECRET} from "./config";
+import {AUTHORIZED_PARTIES, CLERK_PUBLIC_JWT, CLERK_SECRET} from "./config";
 import {authHandler} from "encore.dev/auth";
 import log from "encore.dev/log";
 
@@ -29,16 +29,7 @@ export const auth = authHandler(
         try {
             const result = await verifyToken(token, {
                 secretKey: CLERK_SECRET(),
-                jwtKey: `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwBGt8hLbIRGIZwxuCz4/
-c8h9ayclJa18VRZq+IifjdottnRitMQG/C3O/N6/U0pHSMi61TyEa3/DY67/JbiN
-lUpVYtHrhD9EqlaLmy9TlchXSx3vrR28G/AW5EPOfOGX1Qy+wpQYVNkNYxW5CEQV
-CcfhYdcPhMsJbaTRes2I4z68J/BfoQ4Rg3eWJ3TKZSwmTgbIDn0Am+g2uFFkl6pr
-Woe/GOoImUHJ0duS1+GJMxffWTzW4ilxc4zYeu8pLPPVahufHEr2P9SFITBq8kHr
-IH4wj8lLKyitlCkvzfO/Oy+5YEg1BQfUVslRUyaHWO9JqDvqmyExnjoNitmpY4dE
-KwIDAQAB
------END PUBLIC KEY-----
-`,
+                jwtKey: CLERK_PUBLIC_JWT(),
                 authorizedParties: AUTHORIZED_PARTIES,
             }) as {sub: string};
 
