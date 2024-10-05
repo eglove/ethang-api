@@ -15,7 +15,7 @@
     "lint": "eslint . --fix"
   },
   "devDependencies": {
-    "@ethang/eslint-config": "^19.10.3",
+    "@ethang/eslint-config": "^19.11.0",
     "@types/lodash": "^4.17.10",
     "@types/luxon": "^3.4.2",
     "@types/node": "^22.7.4",

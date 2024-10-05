@@ -3,7 +3,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
     {
-        ignores: [],
+        ignores: ["package-lock.json", "encore.gen", ".encore"],
     },
     ...config,
     {

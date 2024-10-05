@@ -13,7 +13,6 @@ type Project = {
   url: string;
 };
 
-
 export const get = api({
   expose: true,
   method: "GET",
