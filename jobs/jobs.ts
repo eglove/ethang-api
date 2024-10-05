@@ -1,41 +1,101 @@
-import {api} from "encore.dev/api";
-import {PrismaClient} from "@prisma/client";
-import {DATABASE_URL} from "./config";
+import { TZDate } from "@date-fns/tz";
+import { adder } from "@ethang/toolbelt/number/adder";
+import { PrismaClient } from "@prisma/client";
+import { differenceInYears, parseISO } from "date-fns";
+import { api } from "encore.dev/api";
+import forEach from "lodash/forEach";
+import fromPairs from "lodash/fromPairs";
+import { default as lodashGet } from "lodash/get";
+import isNil from "lodash/isNil";
+import map from "lodash/map";
+import reverse from "lodash/reverse";
+import set from "lodash/set";
+import sortBy from "lodash/sortBy";
+import toPairs from "lodash/toPairs";
+import values from "lodash/values";
+
+import { DATABASE_URL } from "./config";
 
 type Job = {
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-    title: string;
-    company: string;
-    startDate: string;
-    endDate: string | null;
-    shortDescription: string;
-    techUsed: string[];
-    methodologiesUsed: string[];
-    descriptionBullets: string[];
-}
+  company: string;
+  createdAt: string;
+  descriptionBullets: string[];
+  endDate: null | string;
+  id: string;
+  methodologiesUsed: string[];
+  shortDescription: string;
+  startDate: string;
+  techUsed: string[];
+  title: string;
+  updatedAt: string;
+};
 
-type Response<T> = {
-    data: T,
-    count?: number
-}
+type Response<T,> = {
+  count?: number;
+  data: T;
+};
 
 export const get = api(
-    {expose: true, auth: true, method: "GET", path: "/jobs"},
-    async (): Promise<Response<Job[]>> => {
-        const prisma = new PrismaClient({datasourceUrl: DATABASE_URL()});
-        const jobs = await prisma.job.findMany();
-        const serialized = jobs.map(job => {
-            return {
-                ...job,
-                createdAt: job.createdAt.toISOString(),
-                updatedAt: job.updatedAt.toISOString(),
-                startDate: job.startDate.toISOString(),
-                endDate: job.endDate?.toISOString() ?? null,
-            }
-        })
+  {
+    auth: true,
+    expose: true,
+    method: "GET",
+    path: "/jobs",
+  },
+  async (): Promise<Response<Job[]>> => {
+    const prisma = new PrismaClient({ datasourceUrl: DATABASE_URL() });
+    const jobs = await prisma.job.findMany();
+    const serialized = map(jobs, (job) => {
+      return {
+        ...job,
+        createdAt: job.createdAt.toISOString(),
+        endDate: job.endDate?.toISOString() ?? null,
+        startDate: job.startDate.toISOString(),
+        updatedAt: job.updatedAt.toISOString(),
+      };
+    });
 
-        return {data: serialized, count: jobs.length}
-    }
-)
+    return {
+      count: jobs.length,
+      data: serialized,
+    };
+  },
+);
+
+type ExperiencesReturn = {
+  max: number;
+  skills: Record<string, number>;
+};
+
+export const experience = api({
+  auth: true,
+  expose: true,
+  method: "GET",
+  path: "/jobs/experience",
+}, async (): Promise<ExperiencesReturn> => {
+  const prisma = new PrismaClient({ datasourceUrl: DATABASE_URL() });
+  const jobs = await prisma.job.findMany();
+
+  const experiences: Record<string, number> = {};
+
+  forEach(jobs, (job) => {
+    const start = parseISO(job.startDate.toISOString());
+    const end = isNil(job.endDate)
+      ? TZDate.tz("America/Chicago", new Date())
+      : parseISO(job.endDate.toISOString());
+    const diff = differenceInYears(start, end);
+
+    forEach(job.techUsed, (skill) => {
+      const current = lodashGet(experiences, [skill], 0);
+      set(experiences, [skill], Number(adder([String(current), String(diff)])));
+    });
+  });
+
+  const sorted = fromPairs(reverse(sortBy(toPairs(experiences), [1])));
+  const max = Math.max(...values(experiences));
+
+  return {
+    max,
+    skills: sorted,
+  };
+});
