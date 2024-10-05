@@ -3,16 +3,16 @@ import { adder } from "@ethang/toolbelt/number/adder";
 import { PrismaClient } from "@prisma/client";
 import { differenceInYears, parseISO } from "date-fns";
 import { api } from "encore.dev/api";
-import forEach from "lodash/forEach";
-import fromPairs from "lodash/fromPairs";
-import { default as lodashGet } from "lodash/get";
-import isNil from "lodash/isNil";
-import map from "lodash/map";
-import reverse from "lodash/reverse";
-import set from "lodash/set";
-import sortBy from "lodash/sortBy";
-import toPairs from "lodash/toPairs";
-import values from "lodash/values";
+import forEach from "lodash/forEach.js";
+import fromPairs from "lodash/fromPairs.js";
+import { default as lodashGet } from "lodash/get.js";
+import isNil from "lodash/isNil.js";
+import map from "lodash/map.js";
+import reverse from "lodash/reverse.js";
+import set from "lodash/set.js";
+import sortBy from "lodash/sortBy.js";
+import toPairs from "lodash/toPairs.js";
+import values from "lodash/values.js";
 
 import { DATABASE_URL } from "./config";
 
