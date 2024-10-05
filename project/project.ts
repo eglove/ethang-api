@@ -1,6 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { api } from "encore.dev/api";
 
+import { serialize } from "../utils/json";
 import { DATABASE_URL } from "./config";
 
 type Project = {
@@ -11,6 +12,7 @@ type Project = {
   updatedAt: string;
   url: string;
 };
+
 
 export const get = api({
   expose: true,
@@ -25,6 +27,6 @@ export const get = api({
 
   return {
     count: projects.length,
-    data: projects,
+    data: serialize(projects),
   };
 });

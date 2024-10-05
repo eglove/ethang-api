@@ -9,6 +9,7 @@ import values from "lodash/values.js";
 // eslint-disable-next-line barrel/avoid-importing-barrel-files
 import { DateTime } from "luxon";
 
+import { serialize } from "../utils/json";
 import { DATABASE_URL } from "./config";
 
 type Job = {
@@ -42,7 +43,7 @@ export const get = api(
 
     return {
       count: jobs.length,
-      data: jobs,
+      data: serialize(jobs),
     };
   },
 );
@@ -83,6 +84,6 @@ export const experience = api({
 
   return {
     max,
-    skills: experiences,
+    skills: serialize(experiences),
   };
 });

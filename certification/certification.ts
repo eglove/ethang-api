@@ -1,6 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { api } from "encore.dev/api";
 
+import { serialize } from "../utils/json";
 import { DATABASE_URL } from "./config";
 
 type Certification = {
@@ -31,6 +32,6 @@ export const get = api({
 
   return {
     count: data.length,
-    data,
+    data: serialize(data),
   };
 });
