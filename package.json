@@ -7,7 +7,6 @@
   "type": "module",
   "scripts": {
     "dev": "encore run",
-    "test": "vitest",
     "deploy": "git push encore"
   },
   "devDependencies": {
