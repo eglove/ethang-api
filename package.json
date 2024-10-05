@@ -29,6 +29,7 @@
     "@clerk/shared": "^2.9.0",
     "@ethang/toolbelt": "^4.3.0",
     "@neondatabase/serverless": "^0.9.5",
+    "@prisma/client": "^5.20.0",
     "encore.dev": "^1.41.7",
     "lodash": "^4.17.21",
     "luxon": "^3.5.0",

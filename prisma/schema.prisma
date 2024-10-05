@@ -19,6 +19,68 @@ model Certification {
   expires     DateTime?
 }
 
+model Course {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String   @db.VarChar(255)
+  imageUrl    String?  @db.VarChar(255)
+  description String?
+
+  instructors      CourseInstructor[]
+  links            CourseLink[]
+  courseListGroups CourseListGroup[]
+}
+
+model CourseLink {
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  title           String   @db.VarChar(255)
+  url             String   @db.VarChar(255)
+  coursePlaformId String
+  courseId        String?
+
+  courseInstructors CourseInstructor[]
+  coursePlatform    CoursePlaform      @relation(fields: [coursePlaformId], references: [id])
+  course            Course?            @relation(fields: [courseId], references: [id])
+}
+
+model CourseListGroup {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String   @db.VarChar(255)
+  title       String   @db.VarChar(255)
+  description String?
+
+  courses Course[]
+}
+
+model CourseInstructor {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @db.VarChar(255)
+  imageUrl  String?  @db.VarChar(255)
+
+  coursePlatforms CoursePlaform[]
+  courseLinks     CourseLink[]
+  courses         Course[]
+}
+
+model CoursePlaform {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @db.VarChar(255)
+  url       String   @db.VarChar(255)
+  imageUrl  String?  @db.VarChar(255)
+
+  courseLinks       CourseLink[]
+  courseInstructors CourseInstructor[]
+}
+
 model Job {
   id                 String    @id @default(uuid())
   createdAt          DateTime  @default(now())
