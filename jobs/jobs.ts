@@ -37,7 +37,6 @@ type Response<T,> = {
 
 export const get = api(
   {
-    auth: true,
     expose: true,
     method: "GET",
     path: "/jobs",
@@ -68,7 +67,6 @@ type ExperiencesReturn = {
 };
 
 export const experience = api({
-  auth: true,
   expose: true,
   method: "GET",
   path: "/jobs/experience",
