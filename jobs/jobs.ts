@@ -1,5 +1,5 @@
 import { TZDate } from "@date-fns/tz";
-import { adder } from "@ethang/toolbelt/number/adder";
+import { adder } from "@ethang/toolbelt/number/adder.js";
 import { PrismaClient } from "@prisma/client";
 import { differenceInYears, parseISO } from "date-fns";
 import { api } from "encore.dev/api";
