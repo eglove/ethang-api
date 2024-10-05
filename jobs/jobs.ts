@@ -1,17 +1,13 @@
-import { TZDate } from "@date-fns/tz";
 import { adder } from "@ethang/toolbelt/number/adder.js";
 import { neon } from "@neondatabase/serverless";
-import { differenceInYears, parseISO } from "date-fns";
 import { api } from "encore.dev/api";
 import forEach from "lodash/forEach.js";
-import fromPairs from "lodash/fromPairs.js";
 import { default as lodashGet } from "lodash/get.js";
 import isNil from "lodash/isNil.js";
-import reverse from "lodash/reverse.js";
 import set from "lodash/set.js";
-import sortBy from "lodash/sortBy.js";
-import toPairs from "lodash/toPairs.js";
 import values from "lodash/values.js";
+// eslint-disable-next-line barrel/avoid-importing-barrel-files
+import { DateTime } from "luxon";
 
 import { DATABASE_URL } from "./config";
 
@@ -67,23 +63,26 @@ export const experience = api({
   const experiences: Record<string, number> = {};
 
   forEach(jobs, (job) => {
-    const start = parseISO(job.startDate);
+    const start = DateTime.fromJSDate(new Date(job.startDate));
     const end = isNil(job.endDate)
-      ? TZDate.tz("America/Chicago", new Date())
-      : parseISO(job.endDate);
-    const diff = differenceInYears(start, end);
+      ? DateTime.now().setZone("America/Chicago")
+      : DateTime.fromJSDate(new Date(job.endDate));
+    const diff = end.diff(start, "years");
 
     forEach(job.techUsed, (skill) => {
       const current = lodashGet(experiences, [skill], 0);
-      set(experiences, [skill], Number(adder([String(current), String(diff)])));
+      set(
+        experiences,
+        [skill],
+        Number(adder([String(current), String(diff.years)])),
+      );
     });
   });
 
-  const sorted = fromPairs(reverse(sortBy(toPairs(experiences), [1])));
   const max = Math.max(...values(experiences));
 
   return {
     max,
-    skills: sorted,
+    skills: experiences,
   };
 });

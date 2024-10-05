@@ -17,6 +17,7 @@
   "devDependencies": {
     "@ethang/eslint-config": "^19.10.3",
     "@types/lodash": "^4.17.10",
+    "@types/luxon": "^3.4.2",
     "@types/node": "^22.7.4",
     "eslint": "^9.12.0",
     "typescript": "^5.6.2",
@@ -26,12 +27,11 @@
   "dependencies": {
     "@clerk/backend": "^1.13.8",
     "@clerk/shared": "^2.9.0",
-    "@date-fns/tz": "^1.1.2",
     "@ethang/toolbelt": "^4.3.0",
     "@neondatabase/serverless": "^0.9.5",
-    "date-fns": "^4.1.0",
     "encore.dev": "^1.41.7",
     "lodash": "^4.17.21",
+    "luxon": "^3.5.0",
     "prisma": "^5.20.0"
   },
   "optionalDependencies": {
