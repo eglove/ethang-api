@@ -1,13 +1,12 @@
 import { TZDate } from "@date-fns/tz";
 import { adder } from "@ethang/toolbelt/number/adder.js";
-import { PrismaClient } from "@prisma/client";
+import { neon } from "@neondatabase/serverless";
 import { differenceInYears, parseISO } from "date-fns";
 import { api } from "encore.dev/api";
 import forEach from "lodash/forEach.js";
 import fromPairs from "lodash/fromPairs.js";
 import { default as lodashGet } from "lodash/get.js";
 import isNil from "lodash/isNil.js";
-import map from "lodash/map.js";
 import reverse from "lodash/reverse.js";
 import set from "lodash/set.js";
 import sortBy from "lodash/sortBy.js";
@@ -42,21 +41,12 @@ export const get = api(
     path: "/jobs",
   },
   async (): Promise<Response<Job[]>> => {
-    const prisma = new PrismaClient({ datasourceUrl: DATABASE_URL() });
-    const jobs = await prisma.job.findMany();
-    const serialized = map(jobs, (job) => {
-      return {
-        ...job,
-        createdAt: job.createdAt.toISOString(),
-        endDate: job.endDate?.toISOString() ?? null,
-        startDate: job.startDate.toISOString(),
-        updatedAt: job.updatedAt.toISOString(),
-      };
-    });
+    const neonSql = neon(DATABASE_URL());
+    const jobs = await neonSql`select * from "Job"` as Job[];
 
     return {
       count: jobs.length,
-      data: serialized,
+      data: jobs,
     };
   },
 );
@@ -71,16 +61,16 @@ export const experience = api({
   method: "GET",
   path: "/jobs/experience",
 }, async (): Promise<ExperiencesReturn> => {
-  const prisma = new PrismaClient({ datasourceUrl: DATABASE_URL() });
-  const jobs = await prisma.job.findMany();
+  const neonSql = neon(DATABASE_URL());
+  const jobs = await neonSql`select * from "Job"` as Job[];
 
   const experiences: Record<string, number> = {};
 
   forEach(jobs, (job) => {
-    const start = parseISO(job.startDate.toISOString());
+    const start = parseISO(job.startDate);
     const end = isNil(job.endDate)
       ? TZDate.tz("America/Chicago", new Date())
-      : parseISO(job.endDate.toISOString());
+      : parseISO(job.endDate);
     const diff = differenceInYears(start, end);
 
     forEach(job.techUsed, (skill) => {

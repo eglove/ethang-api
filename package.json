@@ -1,5 +1,5 @@
 {
-  "name": "encore-ts-starter",
+  "name": "ethang-api",
   "private": true,
   "version": "0.0.1",
   "description": "Encore Typescript Starter",
@@ -28,7 +28,7 @@
     "@clerk/shared": "^2.9.0",
     "@date-fns/tz": "^1.1.2",
     "@ethang/toolbelt": "^4.3.0",
-    "@prisma/client": "^5.20.0",
+    "@neondatabase/serverless": "^0.9.5",
     "date-fns": "^4.1.0",
     "encore.dev": "^1.41.7",
     "lodash": "^4.17.21",
