@@ -2,7 +2,7 @@ import { createClerkClient, verifyToken } from "@clerk/backend";
 import { APIError, Gateway, type Header } from "encore.dev/api";
 import { authHandler } from "encore.dev/auth";
 import log from "encore.dev/log";
-import replace from "lodash/replace";
+import replace from "lodash/replace.js";
 
 import { AUTHORIZED_PARTIES, CLERK_PUBLIC_JWT, CLERK_SECRET } from "./config";
 
